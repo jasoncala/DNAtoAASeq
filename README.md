@@ -1,5 +1,6 @@
 # DNAtoAASeq
-(UNFINISHED and UNPOLISHED)
-Rough speed work of a conversion of DNA to AA seq to be updated and used in future Protein Synthesis Analysis project
+**(UNFINISHED and UNPOLISHED)**
 
-**Program converts DNA sequence to AA sequence
+Few minutes of speed work of a conversion of DNA to AA seq to be updated and used in future Protein Synthesis Analysis project
+
+**Program converts DNA sequence to AA sequence**
