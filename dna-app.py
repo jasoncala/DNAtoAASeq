@@ -2,62 +2,25 @@ import pandas as pd
 import streamlit as st 
 import altair as alt 
 
-st.write("""
-	# DNA Nucleotide Analysis Web App
+def create_RNA(sequence):
+	st.header("RNA Strand")
+	complement = ""
+	for c in sequence:
+		add = ""
+		if (c == 'G'):
+			add+='C' 
+		elif(c == 'C'):
+			add+='G'
+		elif(c=='A'):
+			add+='U'
+		elif(c=='T'):
+			add+='A'
+		complement+=add
+	st.write("3'- "+ complement+" -5'")
+	return complement
 
-	This app performs basic analysis on a given nucleotide sequence!
-
-	***
-	""")
-
-sequence_input = "CAATACTATGGGCTCTTTATTGCCCGCATTCAT"
-
-sequence = st.text_area("Sequence input", sequence_input, height = 75)
-
-st.write("""
-	***
-	""")
-
-st.header("INPUT (DNA Sequence, 5' to 3')")
-st.write("5'- "+ sequence+" -3'")
-
-st.write("""
-	***
-	""")
-
-st.header("RNA Strand")
-complement = ""
-for c in sequence:
-	add = ""
-	if (c == 'G'):
-		add+='C' 
-	elif(c == 'C'):
-		add+='G'
-	elif(c=='A'):
-		add+='U'
-	elif(c=='T'):
-		add+='A'
-	complement+=add
-st.write("3'- "+ complement+" -5'")
-
-if('AUG' in complement):
-	ind = complement.find('AUG')
-	complement = complement[ind:]
-	aalist = ""
-	codon = ""
-	count = 0
-	for c in complement:
-		count+=1
-		if(count<=3):
-			codon+=c
-			if(count == 3):
-				count = 0
-				aalist+=codon+" "
-				codon = ""
-
-	aaArray = aalist.split(' ')
+def build_AA(aaArray):
 	aaStr = "Met(START) "
-
 	for c in aaArray:
 		if (c == 'UAA' or c == 'UAG' or c == 'UGA'):
 			aaStr+= 'STOP'
@@ -101,6 +64,57 @@ if('AUG' in complement):
 			aaStr+= 'Arg '
 		elif(c == 'GGU' or c == 'GGC' or c == 'GGA' or c == 'GGG'):
 			aaStr+= 'Gly '
-	
-	st.header("Amino Acid Sequence")
-	st.write(aaStr)
+	return aaStr
+
+def create_AA(complement):
+	if('AUG' in complement):
+		ind = complement.find('AUG')
+		complement = complement[ind:]
+		aalist = ""
+		codon = ""
+		count = 0
+		for c in complement:
+			count+=1
+			if(count<=3):
+				codon+=c
+				if(count == 3):
+					count = 0
+					aalist+=codon+" "
+					codon = ""
+
+		aaArray = aalist.split(' ')
+
+		aaStr = build_AA(aaArray)
+		
+		st.header("Amino Acid Sequence")
+		st.write(aaStr)
+
+def main():
+	st.write("""
+	# DNA Nucleotide Analysis Web App
+
+	This app performs basic analysis on a given nucleotide sequence!
+
+	***
+	""")
+
+	sequence_input = "CAATACTATGGGCTCTTTATTGCCCGCATTCAT"
+
+	sequence = st.text_area("Sequence input", sequence_input, height = 75)
+
+	st.write("""
+		***
+		""")
+
+	st.header("INPUT (DNA Sequence, 5' to 3')")
+	st.write("5'- "+ sequence+" -3'")
+
+	st.write("""
+		***
+		""")
+
+	complement = create_RNA(sequence)
+	create_AA(complement)
+
+if __name__ == '__main__':
+	main()
